@@ -1,0 +1,13 @@
+version: '3'
+services:
+  vscode:
+    build:
+      context: .
+      dockerfile: vscode.Dockerfile
+    ports:
+      - 42333:5800
+      - 52333:5900
+    volumes:
+      - ~/.data/vscode:/config:rw
+    # environment:
+      # - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
