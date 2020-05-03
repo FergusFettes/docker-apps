@@ -39,3 +39,15 @@ RUN \
       add-apt-repository ppa:jgmath2000/et && \
       apt update && \
       apt install -y et mosh
+
+# Move these up on next build
+RUN \
+     apt install -y man tree openssh-server && \
+     mkdir /var/run/sshd
+
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+EXPOSE 22
