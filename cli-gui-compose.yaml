@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  cli:
+    build:
+      context: .
+      dockerfile: cli.Dockerfile
+    ports:
+    - 8790:5800
+    - 9790:5900
+    volumes:
+    - /mnt/pi.app_data/cli:/config:rw
+    environment:
+    - X11VNC_EXTRA_OPTS=-skip_lockkeys -repeat
+    - KEEP_APP_RUNNING=1
