@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  test-gui:
+    build:
+      context: .
+      dockerfile: ubuntu_test.Dockerfile
+    ports:
+    - 12345:34
+    - 12346:4455/tcp
+    - 12347:4456/udp
+    volumes:
+    - ./vim/:/root/.vim:rw
+    - ./work/:/root/work:rw
