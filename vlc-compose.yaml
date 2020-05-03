@@ -1,0 +1,12 @@
+version: '3'
+services:
+  vlc:
+    build:
+      context: .
+      dockerfile: vlc.Dockerfile
+    ports:
+      - 8493:5800
+      - 9493:5900
+    volumes:
+      - "/dev/snd:/dev/snd"
+      - "/home/ffettes/media:/media"
