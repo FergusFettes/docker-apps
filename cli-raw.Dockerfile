@@ -33,12 +33,17 @@ RUN \
      >> /etc/group
 
 RUN \
-     apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev \
+     apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
      vim python3-neovim tmux zsh git \
      python3 python3-pip && \
      locale-gen en_US.UTF-8 && \
      mkdir /var/run/sshd && \
-     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
+     curl -fLo $UHOME/.installs/bat.deb --create-dirs \
+     https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb && \
+     dpkg -i $UHOME/.installs/bat.deb && \
+     add-apt-repository ppa:jgmath2000/et && \
+     apt install -y et mosh
 
 FROM ubuntu:18.04 as content
 
@@ -69,25 +74,30 @@ FROM base
 
 COPY --from=content /content $UHOME
 
+RUN chown -R "${UID}":"${GID}" "${UHOME}"
+USER ffettes
+
 # install ycm, fzf, oh-my-zsh
 RUN \
      cd $UHOME/.vim/plugged/youcompleteme/ && \
      python3 install.py --rust-completer && \
-     $UHOME/.fzf/install && \
-     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+     $UHOME/.fzf/install
 
-RUN rm $UHOME/.profile $UHOME/.bashrc $UHOME/.fzf.bash
-COPY cli-config $UHOME/
+RUN \
+     mv $UHOME/.oh-my-zsh $UHOME/.temp-zsh && \
+     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+     cp -r $UHOME/.temp-zsh/* $UHOME/.oh-my-zsh/ && \
+     rm -r $UHOME/.temp-zsh
 
+COPY --chown=$UID:$GID cli-config $UHOME/
+
+WORKDIR $UHOME
 ENTRYPOINT /usr/bin/zsh
+
+RUN rm $UHOME/.bashrc #need to sort our the home for the ssh incomers and delete all the spare conifgs
 
 # Then afterwards run
 # nvim -E -c PlugInstall -c qa!
-# And you should be done (make sur eyou map .vim for persistence)
-RUN \
-      apt install -y software-properties-common && \
-      add-apt-repository ppa:jgmath2000/et && \
-      apt update && \
-      apt install -y et mosh
+# And you should be done (make sure you map .vim for persistence)
 
 EXPOSE 22
