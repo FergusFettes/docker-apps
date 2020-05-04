@@ -11,16 +11,16 @@ ENV UID="1000" \
     GID="1000" \
     GNAME="ffettes" \
     SHELL="/bin/zsh" \
-    UHOME=/home/ffettes
+    HOME=/home/ffettes
 
 # User
 RUN \
      apt update && apt install -y sudo && \
      # Create HOME dir
-     mkdir -p "${UHOME}" && \
-     chown "${UID}":"${GID}" "${UHOME}" && \
+     mkdir -p "${HOME}" && \
+     chown "${UID}":"${GID}" "${HOME}" && \
      # Create user
-     echo "${UNAME}:x:${UID}:${GID}:${UNAME},,,:${UHOME}:${SHELL}" \
+     echo "${UNAME}:x:${UID}:${GID}:${UNAME},,,:${HOME}:${SHELL}" \
      >> /etc/passwd && \
      echo "${UNAME}::17032:0:99999:7:::" \
      >> /etc/shadow && \
@@ -39,65 +39,65 @@ RUN \
      locale-gen en_US.UTF-8 && \
      mkdir /var/run/sshd && \
      sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
-     curl -fLo $UHOME/.installs/bat.deb --create-dirs \
+     curl -fLo $HOME/.installs/bat.deb --create-dirs \
      https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb && \
-     dpkg -i $UHOME/.installs/bat.deb && \
+     dpkg -i $HOME/.installs/bat.deb && \
      add-apt-repository ppa:jgmath2000/et && \
      apt install -y et mosh
 
 FROM ubuntu:18.04 as content
 
-ARG UHOME=/content
+ARG HOME=/content
 RUN \
      apt update && apt upgrade && apt install -y curl git
 
 # add vim-plug, youcompleteme and fzf
 RUN \
-     curl -fLo $UHOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+     curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-     mkdir $UHOME/.vim/plugged/ -p && \
+     mkdir $HOME/.vim/plugged/ -p && \
      git clone --depth 1  https://github.com/Valloric/youcompleteme.git \
-     $UHOME/.vim/plugged/youcompleteme && \
-     cd $UHOME/.vim/plugged/youcompleteme/ && \
+     $HOME/.vim/plugged/youcompleteme && \
+     cd $HOME/.vim/plugged/youcompleteme/ && \
      git submodule update --init --recursive && \
-     git clone --depth 1 https://github.com/junegunn/fzf.git $UHOME/.fzf
+     git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
 
 # Add zsh plugins
 RUN \
-     git clone https://github.com/zsh-users/zsh-autosuggestions $UHOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
-     git clone https://github.com/supercrabtree/k $UHOME/.oh-my-zsh/custom/plugins/k && \
-     git clone https://github.com/zsh-users/zsh-syntax-highlighting $UHOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
-     git clone https://github.com/b4b4r07/enhancd $UHOME/.oh-my-zsh/custom/plugins/enhancd
+     git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
+     git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k && \
+     git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
+     git clone https://github.com/b4b4r07/enhancd $HOME/.oh-my-zsh/custom/plugins/enhancd
 
 
 FROM base
 
-COPY --from=content /content $UHOME
+COPY --from=content /content $HOME
+RUN chown -R "${UID}":"${GID}" "${HOME}"
 
-RUN chown -R "${UID}":"${GID}" "${UHOME}"
-USER ffettes
+USER $UNAME
+WORKDIR $HOME
+ENTRYPOINT /bin/zsh
+# just to point out that this is a ssh-test image, also want to use expose and other such feature sproperly soon
+EXPOSE 22
 
 # install ycm, fzf, oh-my-zsh
 RUN \
-     cd $UHOME/.vim/plugged/youcompleteme/ && \
+     cd $HOME/.vim/plugged/youcompleteme/ && \
      python3 install.py --rust-completer && \
-     $UHOME/.fzf/install
-
-RUN \
-     mv $UHOME/.oh-my-zsh $UHOME/.temp-zsh && \
+     $HOME/.fzf/install
+     mv $HOME/.oh-my-zsh $HOME/.temp-zsh && \
      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
-     cp -r $UHOME/.temp-zsh/* $UHOME/.oh-my-zsh/ && \
-     rm -r $UHOME/.temp-zsh
+     cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
+     rm -r $HOME/.temp-zsh
 
-COPY --chown=$UID:$GID cli-config $UHOME/
+COPY --chown=$UID:$GID cli-config $HOME/
 
-WORKDIR $UHOME
-ENTRYPOINT /usr/bin/zsh
+# WIP, experiments etc down here
 
-RUN rm $UHOME/.bashrc #need to sort our the home for the ssh incomers and delete all the spare conifgs
 
+RUN rm $HOME/.bashrc #need to sort our the home for the ssh incomers and delete all the spare conifgs
 # Then afterwards run
 # nvim -E -c PlugInstall -c qa!
 # And you should be done (make sure you map .vim for persistence)
 
-EXPOSE 22
