@@ -77,8 +77,6 @@ RUN chown -R "${UID}":"${GID}" "${HOME}"
 
 USER $UNAME
 WORKDIR $HOME
-ENTRYPOINT /bin/zsh
-# just to point out that this is a ssh-test image, also want to use expose and other such feature sproperly soon
 EXPOSE 22
 
 # install ycm, fzf, oh-my-zsh
@@ -89,15 +87,17 @@ RUN \
      mv $HOME/.oh-my-zsh $HOME/.temp-zsh && \
      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
      cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
-     rm -r $HOME/.temp-zsh
+     rm -r $HOME/.temp-zsh $HOME/.bashrc
 
-COPY --chown=$UID:$GID cli-config $HOME/
+COPY --chown="${UID}":"${GID}" cli-config "${HOME}"/
 
-# WIP, experiments etc down here
+RUN \
+     sudo echo "#!/bin/sh" > /startapp.sh && \
+     sudo echo "sudo $(which sshd)" >> /startapp.sh && \
+     sudo echo "exec /usr/bin/zsh" >> /startapp.sh && \
+     sudo chmod +x /startapp.sh
+ENTRYPOINT /startapp.sh
 
-
-RUN rm $HOME/.bashrc #need to sort our the home for the ssh incomers and delete all the spare conifgs
 # Then afterwards run
-# nvim -E -c PlugInstall -c qa!
+RUN nvim -E -c PlugInstall -c qa!
 # And you should be done (make sure you map .vim for persistence)
-
