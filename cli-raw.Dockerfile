@@ -56,7 +56,7 @@ RUN \
      curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
      mkdir $HOME/.vim/plugged/ -p && \
-     git clone --depth 1  https://github.com/Valloric/youcompleteme.git \
+     git clone --depth 1  https://github.com/valloric/youcompleteme.git \
      $HOME/.vim/plugged/youcompleteme && \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      git submodule update --init --recursive && \
@@ -91,13 +91,15 @@ RUN \
 
 COPY --chown="${UID}":"${GID}" cli-config "${HOME}"/
 
+USER root
 RUN \
-     sudo echo "#!/bin/sh" > /startapp.sh && \
-     sudo echo "sudo $(which sshd)" >> /startapp.sh && \
-     sudo echo "exec /usr/bin/zsh" >> /startapp.sh && \
-     sudo chmod +x /startapp.sh
+     echo "#!/bin/sh" > /startapp.sh && \
+     echo "sudo $(which sshd)" >> /startapp.sh && \
+     echo "exec /usr/bin/zsh" >> /startapp.sh && \
+     chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
+USER $UNAME
 
 # Then afterwards run
-RUN nvim -E -c PlugInstall -c qa!
+# RUN /nvim -E -c PlugInstall -c qa!
 # And you should be done (make sure you map .vim for persistence)
