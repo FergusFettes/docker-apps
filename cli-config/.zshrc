@@ -1,4 +1,4 @@
-export ZSH="$UHOME/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="/usr/bin/nvim"
 ZSH_THEME="robbyrussell"
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )

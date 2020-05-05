@@ -85,7 +85,7 @@ EXPOSE 22
 RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      python3 install.py --rust-completer && \
-     $HOME/.fzf/install
+     $HOME/.fzf/install && \
      mv $HOME/.oh-my-zsh $HOME/.temp-zsh && \
      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
      cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
