@@ -2,7 +2,7 @@
 
 sudo apt remove docker docker-engine docker.io containerd runc
 sudo apt update
-sudo apt install \
+sudo apt install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -17,7 +17,7 @@ sudo add-apt-repository \
    stable"
 
 sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 sudo groupadd docker
 
