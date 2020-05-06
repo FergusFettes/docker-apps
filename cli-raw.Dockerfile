@@ -89,7 +89,7 @@ RUN \
      cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
      rm -r $HOME/.temp-zsh $HOME/.bashrc
 
-COPY --chown="${UID}":"${GID}" cli-config "${HOME}"/
+COPY --chown=1000:1000 cli-config "${HOME}"/
 
 USER root
 RUN \
@@ -99,6 +99,8 @@ RUN \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
 USER $UNAME
+
+
 
 # Then afterwards run
 # RUN /nvim -E -c PlugInstall -c qa!
