@@ -1,84 +1,82 @@
 #
 # https://github.com/fergusfettes/docker-apps
 #
-FROM ubuntu:18.04
+FROM alpine:latest AS base
 RUN \
-     apt update && apt install -y curl wget git
+     mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
+ARG HOME=/content
 
+FROM curlimages/curl:latest AS curl
 RUN \
-     mkdir /root/.vim /root/.debs /root/.zsh /root/.local
-ARG HOME=/root
+     mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
+ARG HOME=/content
 
 # clone debs
 RUN \
      curl -fLo $HOME/.debs/bat.deb --create-dirs \
-     https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb
+     https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb && \
+     # Add zsh install script
+     curl -fsSLo $HOME/.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh && \
+     # add vim-plug, youcompleteme and fzf
+     curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+FROM alpine/git:latest AS git
+RUN \
+     mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
+ARG HOME=/content
 
 # Add zsh plugins
 RUN \
      git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zsh/custom/plugins/zsh-autosuggestions && \
      git clone https://github.com/supercrabtree/k $HOME/.zsh/custom/plugins/k && \
      git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zsh/custom/plugins/zsh-syntax-highlighting && \
-     git clone https://github.com/b4b4r07/enhancd $HOME/.zsh/custom/plugins/enhancd
-
-# Add zsh install script
-RUN \
-     curl -fsSLo $HOME/.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-
-# add vim-plug, youcompleteme and fzf
-RUN \
-     curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-     mkdir $HOME/.vim/plugged/ -p && \
-     git clone --depth 1  https://github.com/valloric/youcompleteme.git \
-     $HOME/.vim/plugged/youcompleteme && \
-     cd $HOME/.vim/plugged/youcompleteme/ && \
-     git submodule update --init --recursive && \
-     git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
+     git clone https://github.com/b4b4r07/enhancd $HOME/.zsh/custom/plugins/enhancd && \
 
 # my vim plugins
 RUN \
-     'git clone --depth 1 https://github.com/scrooloose/nerdtree'
+     git clone --depth 1  https://github.com/valloric/youcompleteme.git $HOME/.vim/plugged/youcompleteme && \
+     cd $HOME/.vim/plugged/youcompleteme/ && \
+     git submodule update --init --recursive && \
+     git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
+     git clone --depth 1 https://github.com/scrooloose/nerdtree $HOME/.vim/plugged && \
      # Silver Searcher
-     'git clone --depth 1 https://github.com/rking/ag.vim'
+     git clone --depth 1 https://github.com/rking/ag.vim $HOME/.vim/plugged && \
      # CtrlP --fuzzy file searcher
-     'git clone --depth 1 https://github.com/ctrlpvim/ctrlp.vim'
+     git clone --depth 1 https://github.com/ctrlpvim/ctrlp.vim $HOME/.vim/plugged && \
      # Git-related
-     'git clone --depth 1 https://github.com/airblade/vim-gitgutter'
-     'git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin'
-     'git clone --depth 1 https://github.com/tpope/vim-fugitive'
+     git clone --depth 1 https://github.com/airblade/vim-gitgutter $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/tpope/vim-fugitive $HOME/.vim/plugged && \
      # Fancy status bar
-     'git clone --depth 1 https://github.com/vim-airline/vim-airline'
-     'git clone --depth 1 https://github.com/vim-airline/vim-airline-themes'
+     git clone --depth 1 https://github.com/vim-airline/vim-airline $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/vim-airline/vim-airline-themes $HOME/.vim/plugged && \
      # Goyo, beautiful reading mode
-     'git clone --depth 1 https://github.com/junegunn/goyo.vim'
-     'git clone --depth 1 https://github.com/junegunn/limelight.vim'
-     'git clone --depth 1 https://github.com/junegunn/seoul256.vim'
+     git clone --depth 1 https://github.com/junegunn/goyo.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/junegunn/limelight.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/junegunn/seoul256.vim $HOME/.vim/plugged && \
      # Linter
-     'git clone --depth 1 https://github.com/w0rp/ale'
+     git clone --depth 1 https://github.com/w0rp/ale $HOME/.vim/plugged && \
      # Other
-     'git clone --depth 1 https://github.com/ntpeters/vim-better-whitespace'
-     'git clone --depth 1 https://github.com/tpope/vim-commentary'
-     'git clone --depth 1 https://github.com/Raimondi/delimitMate'
-     'git clone --depth 1 https://github.com/sheerun/vim-polyglot'
+     git clone --depth 1 https://github.com/ntpeters/vim-better-whitespace $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/tpope/vim-commentary $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/Raimondi/delimitMate $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/sheerun/vim-polyglot $HOME/.vim/plugged && \
      # Close buffers
-     'git clone --depth 1 https://github.com/Asheq/close-buffers.vim'
+     git clone --depth 1 https://github.com/Asheq/close-buffers.vim $HOME/.vim/plugged && \
      #  rust
      #  Vim racer
-     'git clone --depth 1 https://github.com/racer-rust/vim-racer'
+     git clone --depth 1 https://github.com/racer-rust/vim-racer $HOME/.vim/plugged
      #  Plugs I want to check out at some point:
-     # 'git clone --depth 1 https://github.com/skanehira/docker.vim'
-     # 'git clone --depth 1 https://github.com/ivanov/vim-ipython'
+     # git clone --depth 1 https://github.com/skanehira/docker.vim $HOME/.vim/plugged && \
+     # git clone --depth 1 https://github.com/ivanov/vim-ipython $HOME/.vim/plugged && \
      #
      # Track the engine.
-     # 'git clone --depth 1 https://github.com/SirVer/ultisnips'
+     # git clone --depth 1 https://github.com/SirVer/ultisnips $HOME/.vim/plugged && \
      # Snippets are separated from the engine. Add this if you want them:
-     # 'git clone --depth 1 https://github.com/honza/vim-snippets'
+     # git clone --depth 1 https://github.com/honza/vim-snippets $HOME/.vim/plugged && \
      #  Slimv
-     # 'git clone --depth 1 https://github.com/kovisoft/slimv'
-
-
-
+     # git clone --depth 1 https://github.com/kovisoft/slimv $HOME/.vim/plugged && \
 
 # Bunch of vim plugs from elsewhere
 # RUN \
@@ -114,6 +112,10 @@ RUN \
 #     git clone --depth 1 https://github.com/ekalinin/Dockerfile.vim && \
 # # Theme
 #     git clone --depth 1 https://github.com/altercation/vim-colors-solarized
+
+FROM base
+COPY --from=curl /content/* /content
+COPY --from=git /content/* /content
 
 # Metadata.
 ARG IMAGE_VERSION=unknown
