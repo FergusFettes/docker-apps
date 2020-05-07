@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM alpine:latest
 
 # User config
 ENV UID="1000" \
@@ -10,7 +10,6 @@ ENV UID="1000" \
 
 # User
 RUN \
-     apt update && apt install -y sudo && \
      # Create HOME dir
      mkdir -p "${HOME}" && \
      chown "${UID}":"${GID}" "${HOME}" && \
@@ -26,4 +25,3 @@ RUN \
      # Create group
      echo "${GNAME}:x:${GID}:${UNAME}" && \
      >> /etc/group
-
