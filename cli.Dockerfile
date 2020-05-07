@@ -1,5 +1,5 @@
 # Pull base image.
-FROM jlesage/baseimage:ubuntu-18.04
+FROM jlesage/baseimage:ubuntu-18.04 AS base
 
 # install basic packages for cli dev TODO: once ubuntu 2020 is out, change to kitty
 RUN \
@@ -42,7 +42,41 @@ RUN \
 
 FROM base
 
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+# User config
+ENV UID="1000" \
+    UNAME="ffettes" \
+    GID="1000" \
+    GNAME="ffettes" \
+    SHELL="/bin/zsh" \
+    HOME=/home/ffettes
+
+# User
+RUN \
+     apt update && apt install -y sudo && \
+     # Create HOME dir
+     mkdir -p "${HOME}" && \
+     chown "${UID}":"${GID}" "${HOME}" && \
+     # Create user
+     echo "${UNAME}:x:${UID}:${GID}:${UNAME},,,:${HOME}:${SHELL}" \
+     >> /etc/passwd && \
+     echo "${UNAME}::17032:0:99999:7:::" \
+     >> /etc/shadow && \
+     # No password sudo
+     echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" \
+     > "/etc/sudoers.d/${UNAME}" && \
+     chmod 0440 "/etc/sudoers.d/${UNAME}" && \
+     # Create group
+     echo "${GNAME}:x:${GID}:${UNAME}" && \
+     >> /etc/group
+
 COPY --from=content /content $HOME
+RUN chown -R "${UID}":"${GID}" "${HOME}"
+USER $UNAME
+WORKDIR $HOME
 
 # install ycm, fzf, oh-my-zsh
 RUN \
