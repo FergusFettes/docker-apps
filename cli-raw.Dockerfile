@@ -82,7 +82,7 @@ EXPOSE 22
 # install ycm, fzf, oh-my-zsh
 RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
-     python3 install.py --rust-completer && \
+     python3 install.py && \
      $HOME/.fzf/install && \
      mv $HOME/.oh-my-zsh $HOME/.temp-zsh && \
      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
