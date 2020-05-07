@@ -1,14 +1,22 @@
 version: "3.8"
+
 services:
   cli-raw:
     build:
       context: .
       dockerfile: cli-raw.Dockerfile
-    ports:
-    - 12346:4455/tcp
-    - 12347:4456/udp
-    volumes:
-    - ./vim/:/root/.vim:rw
-    - ./work/:/root/work:rw
     tty: true
     stdin_open: true
+    volumes:
+    - type: volume
+      source: nfs-vol
+      target: /home/ffettes/
+
+volumes:
+  nfs-vol:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "nfsvers=4,addr=${PI_IP},rw,async"
+      device: ":/nfsshare"
+
