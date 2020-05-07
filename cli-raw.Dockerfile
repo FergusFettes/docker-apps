@@ -89,16 +89,23 @@ RUN \
      cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
      rm -r $HOME/.temp-zsh $HOME/.bashrc
 
-COPY --chown="${UID}":"${GID}" cli-config "${HOME}"/
+COPY --chown=1000:1000 cli-config "${HOME}"/
 
 USER root
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
-     echo "sudo $(which sshd)" >> /startapp.sh && \
+     echo "$(which sshd)" >> /startapp.sh && \
      echo "exec /usr/bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
 USER $UNAME
+
+# TEMP TESTING
+USER root
+RUN apt update && apt install -y iputils-ping
+RUN mkdir $HOME/work
+USER $UNAME
+
 
 # Then afterwards run
 # RUN /nvim -E -c PlugInstall -c qa!
