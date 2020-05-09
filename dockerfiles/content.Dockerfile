@@ -12,14 +12,16 @@ RUN \
      mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
 ARG HOME=/content
 
-# clone debs
 RUN \
+     # get debs for bat and ripgrep
      curl -fsSLo $HOME/.debs/bat.deb --create-dirs \
      https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb && \
+     curl -fsSLo $HOME/.debs/ripgrep.deb --create-dirs \
+     https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && \
      # Add zsh install script
      curl -fsSLo $HOME/.zsh/install.sh --create-dirs \
      https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh && \
-     # add vim-plug, youcompleteme and fzf
+     # add vim-plug
      curl -fsSLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
@@ -117,8 +119,8 @@ RUN \
 #     git clone --depth 1 https://github.com/altercation/vim-colors-solarized
 
 FROM base
-COPY --from=curl /content/* /content
-COPY --from=git /content/* /content
+COPY --from=curl /content/* /content/
+COPY --from=git /content/* /content/
 
 # Metadata.
 ARG IMAGE_VERSION=unknown

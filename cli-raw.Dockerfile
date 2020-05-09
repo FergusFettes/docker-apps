@@ -4,7 +4,7 @@ FROM ubuntu:18.04 as base
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
-ENV HOME
+ENV HOME /home/ffettes
 
 # Standard apt installs
 RUN \
@@ -25,16 +25,15 @@ COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.debs $H
 COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.local $HOME/.local
 COPY --chown=1000:1000 cli-config "${HOME}"/
 
-# installs from content ycm, fzf, oh-my-zsh
+# installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
-     python3 install.py --rust-completer && \
+     python3 install.py && \
      $HOME/.fzf/install && \
-     mv $HOME/.oh-my-zsh $HOME/.temp-zsh && \
-     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
-     cp -r $HOME/.temp-zsh/* $HOME/.oh-my-zsh/ && \
-     rm -r $HOME/.temp-zsh $HOME/.bashrc && \
-     dpkg -i $HOME/.installs/bat.deb
+     ZSH=$HOME/.zsh \
+     sh install.sh --unattended --keep-zshrc && \
+     dpkg -i $HOME/.debs/ripgrep.deb && \
+     dpkg -i $HOME/.debs/bat.deb
 
 COPY --from=randomvilliager/docker-apps:content /etc/passwd /etc/passwd
 COPY --from=randomvilliager/docker-apps:content /etc/shadow /etc/shadow
