@@ -10,6 +10,7 @@ ENV UID="1000" \
 
 # User
 RUN \
+
      # Create HOME dir
      mkdir -p "${HOME}" && \
      chown "${UID}":"${GID}" "${HOME}" && \
@@ -19,6 +20,7 @@ RUN \
      echo "${UNAME}::17032:0:99999:7:::" \
      >> /etc/shadow && \
      # No password sudo
+     mkdir /etc/sudoers.d/ && \
      echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" \
      > "/etc/sudoers.d/${UNAME}" && \
      chmod 0440 "/etc/sudoers.d/${UNAME}" && \

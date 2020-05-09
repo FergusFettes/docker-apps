@@ -69,7 +69,7 @@ RUN \
      git clone --depth 1 https://github.com/Asheq/close-buffers.vim && \
      #  rust
      #  Vim racer
-     git clone --depth 1 https://github.com/racer-rust/vim-racer $HOME/.vim/plugged
+     git clone --depth 1 https://github.com/racer-rust/vim-racer
      #  Plugs I want to check out at some point:
      # git clone --depth 1 https://github.com/skanehira/docker.vim && \
      # git clone --depth 1 https://github.com/ivanov/vim-ipython && \
