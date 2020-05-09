@@ -41,44 +41,45 @@ RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      git submodule update --init --recursive && \
      git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
-     git clone --depth 1 https://github.com/scrooloose/nerdtree $HOME/.vim/plugged && \
+     cd $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/scrooloose/nerdtree && \
      # Silver Searcher
-     git clone --depth 1 https://github.com/rking/ag.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/rking/ag.vim && \
      # CtrlP --fuzzy file searcher
-     git clone --depth 1 https://github.com/ctrlpvim/ctrlp.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/ctrlpvim/ctrlp.vim && \
      # Git-related
-     git clone --depth 1 https://github.com/airblade/vim-gitgutter $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/tpope/vim-fugitive $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/airblade/vim-gitgutter && \
+     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin && \
+     git clone --depth 1 https://github.com/tpope/vim-fugitive && \
      # Fancy status bar
-     git clone --depth 1 https://github.com/vim-airline/vim-airline $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/vim-airline/vim-airline-themes $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/vim-airline/vim-airline && \
+     git clone --depth 1 https://github.com/vim-airline/vim-airline-themes && \
      # Goyo, beautiful reading mode
-     git clone --depth 1 https://github.com/junegunn/goyo.vim $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/junegunn/limelight.vim $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/junegunn/seoul256.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/junegunn/goyo.vim && \
+     git clone --depth 1 https://github.com/junegunn/limelight.vim && \
+     git clone --depth 1 https://github.com/junegunn/seoul256.vim && \
      # Linter
-     git clone --depth 1 https://github.com/w0rp/ale $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/w0rp/ale && \
      # Other
-     git clone --depth 1 https://github.com/ntpeters/vim-better-whitespace $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/tpope/vim-commentary $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/Raimondi/delimitMate $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/sheerun/vim-polyglot $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/ntpeters/vim-better-whitespace && \
+     git clone --depth 1 https://github.com/tpope/vim-commentary && \
+     git clone --depth 1 https://github.com/Raimondi/delimitMate && \
+     git clone --depth 1 https://github.com/sheerun/vim-polyglot && \
      # Close buffers
-     git clone --depth 1 https://github.com/Asheq/close-buffers.vim $HOME/.vim/plugged && \
+     git clone --depth 1 https://github.com/Asheq/close-buffers.vim && \
      #  rust
      #  Vim racer
      git clone --depth 1 https://github.com/racer-rust/vim-racer $HOME/.vim/plugged
      #  Plugs I want to check out at some point:
-     # git clone --depth 1 https://github.com/skanehira/docker.vim $HOME/.vim/plugged && \
-     # git clone --depth 1 https://github.com/ivanov/vim-ipython $HOME/.vim/plugged && \
+     # git clone --depth 1 https://github.com/skanehira/docker.vim && \
+     # git clone --depth 1 https://github.com/ivanov/vim-ipython && \
      #
      # Track the engine.
-     # git clone --depth 1 https://github.com/SirVer/ultisnips $HOME/.vim/plugged && \
+     # git clone --depth 1 https://github.com/SirVer/ultisnips && \
      # Snippets are separated from the engine. Add this if you want them:
-     # git clone --depth 1 https://github.com/honza/vim-snippets $HOME/.vim/plugged && \
+     # git clone --depth 1 https://github.com/honza/vim-snippets && \
      #  Slimv
-     # git clone --depth 1 https://github.com/kovisoft/slimv $HOME/.vim/plugged && \
+     # git clone --depth 1 https://github.com/kovisoft/slimv && \
 
 # Bunch of vim plugs from elsewhere
 # RUN \
