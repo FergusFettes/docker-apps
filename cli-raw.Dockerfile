@@ -19,8 +19,7 @@ RUN \
      mkdir /var/run/sshd && \
      sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-COPY --chown=1000:1000 --from=content /content/ $HOME/
-COPY --chown=1000:1000 cli-config $HOME/
+COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
 
 # installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
@@ -35,10 +34,15 @@ RUN \
      dpkg -i $HOME/.debs/ripgrep.deb && \
      dpkg -i $HOME/.debs/bat.deb
 
-COPY --from=randomvilliager/docker-apps:content /etc/passwd /etc/passwd
-COPY --from=randomvilliager/docker-apps:content /etc/shadow /etc/shadow
-COPY --from=randomvilliager/docker-apps:content /etc/group /etc/group
-COPY --from=randomvilliager/docker-apps:content /etc/sudoers.d/ /etc/
+# move this up at some point
+RUN \
+     apt update && apt install sudo
+
+COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
+COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
+COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
+COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
+COPY --chown=1000:1000 cli-config $HOME/
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \

@@ -25,6 +25,9 @@ RUN \
      chmod 0440 "/etc/sudoers.d/${UNAME}" && \
      # Create group
      echo "${GNAME}:x:${GID}:${UNAME}" && \
+     >> /etc/group && \
+     # this one is needed in ubuntu but isnt in alpine
+     echo "staff:x:50:" && \
      >> /etc/group
 
 # Metadata.
