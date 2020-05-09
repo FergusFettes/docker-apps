@@ -31,7 +31,7 @@ RUN \
      cd $HOME/.temp && \
      ZSH=$HOME/.zsh \
      sh install.sh --unattended --keep-zshrc && \
-     mv $HOME/.temp/* $HOME/.zsh && \
+     mv $HOME/.temp/custom/plugins/* $HOME/.zsh/custom/plugins && \
      dpkg -i $HOME/.debs/ripgrep.deb && \
      dpkg -i $HOME/.debs/bat.deb
 
