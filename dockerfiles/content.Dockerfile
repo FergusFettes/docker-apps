@@ -6,19 +6,21 @@ RUN \
      mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
 ARG HOME=/content
 
-FROM curlimages/curl:latest AS curl
+FROM alpine:latest AS curl
+RUN apk add curl
 RUN \
      mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
 ARG HOME=/content
 
 # clone debs
 RUN \
-     curl -fLo $HOME/.debs/bat.deb --create-dirs \
+     curl -fsSLo $HOME/.debs/bat.deb --create-dirs \
      https://github.com/sharkdp/bat/releases/download/v0.15.0/bat_0.15.0_amd64.deb && \
      # Add zsh install script
-     curl -fsSLo $HOME/.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh && \
+     curl -fsSLo $HOME/.zsh/install.sh --create-dirs \
+     https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh && \
      # add vim-plug, youcompleteme and fzf
-     curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+     curl -fsSLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 FROM alpine/git:latest AS git
@@ -31,7 +33,7 @@ RUN \
      git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zsh/custom/plugins/zsh-autosuggestions && \
      git clone https://github.com/supercrabtree/k $HOME/.zsh/custom/plugins/k && \
      git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zsh/custom/plugins/zsh-syntax-highlighting && \
-     git clone https://github.com/b4b4r07/enhancd $HOME/.zsh/custom/plugins/enhancd && \
+     git clone https://github.com/b4b4r07/enhancd $HOME/.zsh/custom/plugins/enhancd
 
 # my vim plugins
 RUN \
