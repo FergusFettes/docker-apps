@@ -16,9 +16,12 @@ RUN \
 COPY cli-config /defaults/
 
 RUN \
+     add-pkg gimp
+
+RUN \
      echo "#!/bin/sh" > /startapp.sh && \
-     echo "export HOME=/defaults" >> /startapp.sh && \
-     echo "exec /usr/bin/xterm" >> /startapp.sh
+     echo "export HOME=/config" >> /startapp.sh && \
+     echo "exec /usr/bin/gimp" >> /startapp.sh
 
 ENV \
      APP_NAME="CLI"
