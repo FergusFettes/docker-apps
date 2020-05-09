@@ -19,17 +19,15 @@ RUN \
      mkdir /var/run/sshd && \
      sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.vim $HOME/.vim
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.zsh $HOME/.zsh
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.debs $HOME/.debs
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /root/.local $HOME/.local
-COPY --chown=1000:1000 cli-config "${HOME}"/
+COPY --chown=1000:1000 --from=content /content/ $HOME/
+COPY --chown=1000:1000 cli-config $HOME/
 
 # installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      python3 install.py && \
      $HOME/.fzf/install && \
+     cd $HOME/.zsh && \
      ZSH=$HOME/.zsh \
      sh install.sh --unattended --keep-zshrc && \
      dpkg -i $HOME/.debs/ripgrep.deb && \

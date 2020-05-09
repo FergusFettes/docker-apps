@@ -119,8 +119,8 @@ RUN \
 #     git clone --depth 1 https://github.com/altercation/vim-colors-solarized
 
 FROM base
-COPY --from=curl /content/* /content/
-COPY --from=git /content/* /content/
+COPY --from=curl /content/ /content/
+COPY --from=git /content/ /content/
 
 # Metadata.
 ARG IMAGE_VERSION=helper
