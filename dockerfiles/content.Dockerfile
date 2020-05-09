@@ -123,7 +123,7 @@ COPY --from=curl /content/* /content/
 COPY --from=git /content/* /content/
 
 # Metadata.
-ARG IMAGE_VERSION=unknown
+ARG IMAGE_VERSION=helper
 LABEL \
       org.label-schema.name="terminal-content" \
       org.label-schema.description="All my terminal content that needs to be curled, wgetted or git cloned" \

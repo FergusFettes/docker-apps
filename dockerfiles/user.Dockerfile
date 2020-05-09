@@ -10,7 +10,6 @@ ENV UID="1000" \
 
 # User
 RUN \
-
      # Create HOME dir
      mkdir -p "${HOME}" && \
      chown "${UID}":"${GID}" "${HOME}" && \
@@ -27,3 +26,12 @@ RUN \
      # Create group
      echo "${GNAME}:x:${GID}:${UNAME}" && \
      >> /etc/group
+
+# Metadata.
+ARG IMAGE_VERSION=helper
+LABEL \
+      org.label-schema.name="user-management" \
+      org.label-schema.description="User management" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      org.label-schema.vcs-url="https://github.com/fergusfettes/docker-apps" \
+      org.label-schema.schema-version="1.0"
