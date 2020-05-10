@@ -47,7 +47,11 @@ COPY --chown=1000:1000 cli-config $HOME/
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      echo "$(which sshd)" >> /startapp.sh && \
-     echo "exec /usr/bin/zsh" >> /startapp.sh && \
+     echo "export SHELL=/bin/zsh" >> /startapp.sh && \
+     # The next two lines are useful if you map your ssh keys in and want to use github
+     echo "eval `ssh-agent -s`" >> /startapp.sh && \
+     echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
+     echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
 EXPOSE 22

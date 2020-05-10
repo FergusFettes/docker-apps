@@ -31,4 +31,4 @@ source ~/.config/personal/.zshrc.alias
 # Export all the functions
 source ~/.config/personal/.zshrc.func
 
-tmux
+if [ -z $TMUX ]; then tmux; fi
