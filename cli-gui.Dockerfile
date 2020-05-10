@@ -34,18 +34,22 @@ RUN \
      dpkg -i $HOME/.debs/ripgrep.deb && \
      dpkg -i $HOME/.debs/bat.deb
 
-COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
-COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
-COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
-COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
+ARG UNAME=app
+RUN \
+     echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" \
+     > "/etc/sudoers.d/${UNAME}" && \
+     chmod 0440 "/etc/sudoers.d/${UNAME}"
 COPY --chown=1000:1000 cli-config $HOME/
 
 RUN chown -R 1000:1000 /defaults
+
+RUN \
+   add-pkg x11-utils
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      echo "export HOME=${HOME}" >> /startapp.sh && \
      echo "$(which sshd)" >> /startapp.sh && \
      echo "export SHELL=/usr/bin/zsh" >> /startapp.sh && \
-     echo "exec /usr/bin/xterm" >> /startapp.sh
+     echo "exec /usr/bin/xev" >> /startapp.sh
 ENV \
      APP_NAME="CLI"
