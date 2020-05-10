@@ -1,4 +1,4 @@
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="$HOME/.zsh"
 export EDITOR="/usr/bin/nvim"
 ZSH_THEME="robbyrussell"
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
@@ -14,7 +14,7 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-source ~/.oh-my-zsh/custom/plugins/enhancd/init.sh
+source ~/.zsh/custom/plugins/enhancd/init.sh
 # source ~/.config/broot/launcher/bash/br
 
 bindkey '^[n' beginning-of-line

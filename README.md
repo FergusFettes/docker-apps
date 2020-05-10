@@ -10,4 +10,6 @@ Here are my docker experiments. Currently I have 3 or 4 goals, in approximate or
 
 3. vlc media player media center so i can stream video and audio over vnc/http and people can all watch the same movie on their own laptops
 
-4. blender headless renderer afaict i might have genuinly found something that should exist but doesnt yet? once i have completed the obve images i should have enough experience to do this
+4. firefox so everyone can watch youtube videos together horrray (just need to connect audio like above, if i do a bit of playing around with pulseaudio these images should be no problem)
+
+5. blender headless renderer afaict i might have genuinly found something that should exist but doesnt yet? once i have completed the obve images i should have enough experience to do this

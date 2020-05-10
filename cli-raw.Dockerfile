@@ -1,41 +1,55 @@
 # Pull base image.
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as base
 
-RUN apt update && apt upgrade && apt install -y curl wget build-essential cmake python3-dev \
-      vim python3-neovim tmux zsh git \
-      python3 python3-pip
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV HOME /home/ffettes
 
-# add vim-plug, youcompleteme and fzf
+# Standard apt installs
 RUN \
-     curl -fLo /root/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-     mkdir /root/.vim/plugged/ -p && \
-     git clone --depth 1  https://github.com/Valloric/youcompleteme.git \
-     /root/.vim/plugged/youcompleteme && \
-     cd /root/.vim/plugged/youcompleteme/ && \
-     git submodule update --init --recursive && \
-     python3 install.py --rust-completer && \
-     git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf && \
-     /root/.fzf/install
+     apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
+     iputils-ping \
+     vim python3-neovim tmux zsh git mosh \
+     python3
 
-# Add zsh with plugins
+# Configuration
 RUN \
-     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
-     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
-     git clone https://github.com/supercrabtree/k ~/.oh-my-zsh/custom/plugins/k && \
-     git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
-     git clone https://github.com/b4b4r07/enhancd ~/.oh-my-zsh/custom/plugins/enhancd
+     locale-gen en_US.UTF-8 && \
+     mkdir /var/run/sshd && \
+     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-RUN rm /root/.profile /root/.bashrc /root/.fzf.bash
-COPY cli-config /root/
+COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
 
-ENTRYPOINT /usr/bin/zsh
-
-# Then afterwards run
-# nvim -E -c PlugInstall -c qa!
-# And you should be done (make sur eyou map .vim for persistence)
+# installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
-      apt install -y software-properties-common && \
-      add-apt-repository ppa:jgmath2000/et && \
-      apt update && \
-      apt install -y et mosh
+     cd $HOME/.vim/plugged/youcompleteme/ && \
+     python3 install.py && \
+     $HOME/.fzf/install && \
+     mv $HOME/.zsh $HOME/.temp && \
+     cd $HOME/.temp && \
+     ZSH=$HOME/.zsh \
+     sh install.sh --unattended --keep-zshrc && \
+     mv $HOME/.temp/custom/plugins/* $HOME/.zsh/custom/plugins && \
+     dpkg -i $HOME/.debs/ripgrep.deb && \
+     dpkg -i $HOME/.debs/bat.deb
+
+# move this up at some point
+RUN \
+     apt update && apt install sudo
+
+COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
+COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
+COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
+COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
+COPY --chown=1000:1000 cli-config $HOME/
+
+RUN \
+     echo "#!/bin/sh" > /startapp.sh && \
+     echo "$(which sshd)" >> /startapp.sh && \
+     echo "exec /usr/bin/zsh" >> /startapp.sh && \
+     chmod +x /startapp.sh
+ENTRYPOINT /startapp.sh
+EXPOSE 22
+WORKDIR $HOME
+USER $UNAME
