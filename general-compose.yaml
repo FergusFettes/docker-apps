@@ -7,8 +7,9 @@ services:
       dockerfile: cli-raw.Dockerfile
     tty: true
     stdin_open: true
+    working_dir: /home/ffettes/work
     volumes:
-    - /mnt/pi/app_data/schau:/home/ffettes:rw
+    - /mnt/pi/app_data/schau:/home/ffettes/work:rw
     - /home/ffettes/.ssh:/home/ffettes/.ssh
 
   # cli-gui:

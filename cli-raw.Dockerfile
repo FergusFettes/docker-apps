@@ -44,6 +44,12 @@ COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
 COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
 COPY --chown=1000:1000 cli-config $HOME/
 
+# ENV UNAME ffettes
+RUN \
+     echo "[user]" > $HOME/.gitconfig && \
+     echo "  email = $UNAME@cli-raw.image" >> $HOME/.gitconfig && \
+     echo "  name = $UNAME" >> $HOME/.gitconfig
+
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      echo "$(which sshd)" >> /startapp.sh && \
@@ -57,3 +63,12 @@ ENTRYPOINT /startapp.sh
 EXPOSE 22
 WORKDIR $HOME
 USER $UNAME
+
+# Metadata.
+ARG IMAGE_VERSION=cli-raw
+LABEL \
+      org.label-schema.name="cli-raw" \
+      org.label-schema.description="My basic terminal environment" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      org.label-schema.vcs-url="https://github.com/fergusfettes/docker-apps" \
+      org.label-schema.schema-version="1.0"
