@@ -30,6 +30,10 @@ RUN \
      mkdir -p /content/.vim /content/.debs /content/.zsh /content/.local
 ARG HOME=/content
 
+# Install bat extras
+RUN \
+     git clone https://github.com/eth-p/bat-extras $HOME/.local
+
 # Add zsh plugins
 RUN \
      git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.zsh/custom/plugins/zsh-autosuggestions && \
@@ -45,13 +49,15 @@ RUN \
      git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
      cd $HOME/.vim/plugged && \
      git clone --depth 1 https://github.com/scrooloose/nerdtree && \
+     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin && \
      # Silver Searcher
+     # TODO: properly try out these search tools and choose one
      git clone --depth 1 https://github.com/rking/ag.vim && \
+     # git clone --depth 1 https://github.com/vim-scripts/EasyGrep && \
      # CtrlP --fuzzy file searcher
      git clone --depth 1 https://github.com/ctrlpvim/ctrlp.vim && \
      # Git-related
      git clone --depth 1 https://github.com/airblade/vim-gitgutter && \
-     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin && \
      git clone --depth 1 https://github.com/tpope/vim-fugitive && \
      # Fancy status bar
      git clone --depth 1 https://github.com/vim-airline/vim-airline && \
@@ -59,20 +65,37 @@ RUN \
      # Goyo, beautiful reading mode
      git clone --depth 1 https://github.com/junegunn/goyo.vim && \
      git clone --depth 1 https://github.com/junegunn/limelight.vim && \
-     git clone --depth 1 https://github.com/junegunn/seoul256.vim && \
      # Linter
+     # TODO: maybe ty out syntasti at some point
      git clone --depth 1 https://github.com/w0rp/ale && \
+     # git clone --depth 1 https://github.com/scrooloose/syntastic && \
      # Other
      git clone --depth 1 https://github.com/ntpeters/vim-better-whitespace && \
+     git clone --depth 1 https://github.com/godlygeek/tabular && \
+     git clone --depth 1 https://github.com/nathanaelkane/vim-indent-guides && \
      git clone --depth 1 https://github.com/tpope/vim-commentary && \
+     # git clone --depth 1 https://github.com/scrooloose/nerdcommenter && \
      git clone --depth 1 https://github.com/Raimondi/delimitMate && \
      git clone --depth 1 https://github.com/sheerun/vim-polyglot && \
      # Close buffers
      git clone --depth 1 https://github.com/Asheq/close-buffers.vim && \
+     # TODO: try these two out
+     git clone --depth 1 https://github.com/mbbill/undotree && \
+     git clone --depth 1 https://github.com/majutsushi/tagbar && \
+     # git clone --depth 1 https://github.com/vim-scripts/taglist.vim && \
+     # number converter
+     # TODO: try out radical and surroutn
+     git clone --depth 1 https://github.com/tpope/vim-repeat && \
+     git clone --depth 1 https://github.com/tpope/vim-surround && \
+     git clone --depth 1 https://github.com/glts/vim-magnum.git && \
+     git clone --depth 1 https://github.com/glts/vim-radical.git && \
+     # TODO: get to know this one and fix registers forever
+     git clone --depth 1 https://github.com/svermeulen/vim-easyclip && \
      #  rust
      #  Vim racer
-     git clone --depth 1 https://github.com/racer-rust/vim-racer
+     # git clone --depth 1 https://github.com/racer-rust/vim-racer && \
      #  Plugs I want to check out at some point:
+     # git clone --depth 1 https://github.com/easymotion/vim-easymotion && \
      # git clone --depth 1 https://github.com/skanehira/docker.vim && \
      # git clone --depth 1 https://github.com/ivanov/vim-ipython && \
      #
@@ -82,41 +105,11 @@ RUN \
      # git clone --depth 1 https://github.com/honza/vim-snippets && \
      #  Slimv
      # git clone --depth 1 https://github.com/kovisoft/slimv && \
-
-# Bunch of vim plugs from elsewhere
-# RUN \
-#     git clone --depth 1 https://github.com/pangloss/vim-javascript && \
-#     git clone --depth 1 https://github.com/scrooloose/nerdcommenter && \
-#     git clone --depth 1 https://github.com/godlygeek/tabular && \
-#     git clone --depth 1 https://github.com/nathanaelkane/vim-indent-guides && \
-#     git clone --depth 1 https://github.com/groenewege/vim-less && \
-#     git clone --depth 1 https://github.com/othree/html5.vim && \
-#     git clone --depth 1 https://github.com/elzr/vim-json && \
-#     git clone --depth 1 https://github.com/easymotion/vim-easymotion && \
-#     git clone --depth 1 https://github.com/mbbill/undotree && \
-#     git clone --depth 1 https://github.com/majutsushi/tagbar && \
-#     git clone --depth 1 https://github.com/vim-scripts/EasyGrep && \
-#     git clone --depth 1 https://github.com/jlanzarotta/bufexplorer && \
-#     git clone --depth 1 https://github.com/jistr/vim-nerdtree-tabs && \
-#     git clone --depth 1 https://github.com/scrooloose/syntastic && \
-#     git clone --depth 1 https://github.com/tomtom/tlib_vim && \
-#     git clone --depth 1 https://github.com/marcweber/vim-addon-mw-utils && \
-#     git clone --depth 1 https://github.com/vim-scripts/taglist.vim && \
-#     git clone --depth 1 https://github.com/terryma/vim-expand-region && \
-#     git clone --depth 1 https://github.com/fatih/vim-go && \
-#     git clone --depth 1 https://github.com/plasticboy/vim-markdown && \
-#     git clone --depth 1 https://github.com/michaeljsmith/vim-indent-object && \
-#     git clone --depth 1 https://github.com/terryma/vim-multiple-cursors && \
-#     git clone --depth 1 https://github.com/tpope/vim-repeat && \
-#     git clone --depth 1 https://github.com/tpope/vim-surround && \
-#     git clone --depth 1 https://github.com/vim-scripts/mru.vim && \
-#     git clone --depth 1 https://github.com/vim-scripts/YankRing.vim && \
-#     git clone --depth 1 https://github.com/tpope/vim-haml && \
-#     git clone --depth 1 https://github.com/derekwyatt/vim-scala && \
-#     git clone --depth 1 https://github.com/christoomey/vim-tmux-navigator && \
-#     git clone --depth 1 https://github.com/ekalinin/Dockerfile.vim && \
-# # Theme
-#     git clone --depth 1 https://github.com/altercation/vim-colors-solarized
+     # git clone --depth 1 https://github.com/terryma/vim-expand-region && \
+     # git clone --depth 1 https://github.com/michaeljsmith/vim-indent-object && \
+     # Theme
+     git clone --depth 1 https://github.com/junegunn/seoul256.vim
+     # git clone --depth 1 https://github.com/altercation/vim-colors-solarized
 
 FROM base
 COPY --from=curl /content/ /content/
