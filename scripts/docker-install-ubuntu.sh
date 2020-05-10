@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 sudo apt remove docker docker-engine docker.io containerd runc
 sudo apt update
 sudo apt install -y \
@@ -19,8 +21,7 @@ sudo add-apt-repository \
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
-sudo groupadd docker
-
+sudo groupadd docker || true
 sudo usermod -aG docker $USER
 
 newgrp docker
