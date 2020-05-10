@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+
+  # cli-raw:
+  #   build:
+  #     context: .
+  #     dockerfile: cli-raw.Dockerfile
+  #   tty: true
+  #   stdin_open: true
+  #   volumes:
+  #   - type: volume
+  #     source: nfs-vol
+  #     target: /home/ffettes/
+
+  cli-gui:
+    build:
+      context: .
+      dockerfile: cli-gui.Dockerfile
+    ports:
+    - 8790:5800
+    - 9790:5900
+    volumes:
+    - /mnt/pi/app_data/cli:/config:rw
+    environment:
+    - X11VNC_EXTRA_OPTS=-skip_lockkeys -repeat
+    - KEEP_APP_RUNNING=1
+
+# volumes:
+#   nfs-vol:
+#     driver: local
+#     driver_opts:
+#       type: "nfs"
+#       o: "nfsvers=4,addr=${PI_IP},rw,async"
+#       device: ":/nfsshare"

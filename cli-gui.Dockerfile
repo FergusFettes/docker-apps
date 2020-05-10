@@ -1,27 +1,50 @@
 # Pull base image.
-FROM jlesage/baseimage-gui:ubuntu-18.04
+FROM jlesage/baseimage-gui:ubuntu-18.04 AS base
 
-# install basic packages for cli dev TODO: once ubuntu 2020 is out, change to kitty
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV HOME /defaults
+
+# Standard apt installs
 RUN \
-     add-pkg vim python3-neovim tmux xterm zsh git
+     apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
+     iputils-ping sudo \
+     vim python3-neovim tmux zsh git mosh xterm \
+     python3
 
-# add vim-plug
+# Configuration
 RUN \
-     add-pkg --virtual deps curl && \
-     curl -fLo /config/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
-     del-pkg deps
+     locale-gen en_US.UTF-8 && \
+     mkdir /var/run/sshd && \
+     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-COPY cli-config /defaults/
+COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
 
+# installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
-     add-pkg gimp
+     cd $HOME/.vim/plugged/youcompleteme/ && \
+     python3 install.py && \
+     $HOME/.fzf/install && \
+     mv $HOME/.zsh $HOME/.temp && \
+     cd $HOME/.temp && \
+     ZSH=$HOME/.zsh \
+     sh install.sh --unattended --keep-zshrc && \
+     mv $HOME/.temp/custom/plugins/* $HOME/.zsh/custom/plugins && \
+     dpkg -i $HOME/.debs/ripgrep.deb && \
+     dpkg -i $HOME/.debs/bat.deb
+
+COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
+COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
+COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
+COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
+COPY --chown=1000:1000 cli-config $HOME/
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      echo "export HOME=/config" >> /startapp.sh && \
-     echo "exec /usr/bin/gimp" >> /startapp.sh
-
+     echo "$(which sshd)" >> /startapp.sh && \
+     echo "exec /usr/bin/xterm" >> /startapp.sh
+ENTRYPOINT /startapp.sh
 ENV \
      APP_NAME="CLI"
