@@ -30,3 +30,5 @@ source ~/.config/personal/.zshrc.vars
 source ~/.config/personal/.zshrc.alias
 # Export all the functions
 source ~/.config/personal/.zshrc.func
+
+tmux
