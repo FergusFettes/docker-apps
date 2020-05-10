@@ -7,6 +7,7 @@ ENV LANGUAGE en_US.UTF-8
 ENV HOME /home/ffettes
 
 # Standard apt installs
+# TODO: find out which of these are build dependencies and delete them afterwards, use the jlesage image for these things
 RUN \
      apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
      iputils-ping iproute2 sudo \
