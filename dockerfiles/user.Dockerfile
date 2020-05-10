@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM ubuntu:18.04-slim
 
 # User config
 ENV UID="1000" \
@@ -6,7 +6,8 @@ ENV UID="1000" \
     GID="1000" \
     GNAME="ffettes" \
     SHELL="/bin/zsh" \
-    HOME=/home/ffettes
+    HOME=/home/ffettes \
+    EMAIL=fergusfettes@gmail.com
 
 # User
 RUN \
@@ -25,10 +26,13 @@ RUN \
      chmod 0440 "/etc/sudoers.d/${UNAME}" && \
      # Create group
      echo "${GNAME}:x:${GID}:${UNAME}" && \
-     >> /etc/group && \
-     # this one is needed in ubuntu but isnt in alpine
-     echo "staff:x:50:" && \
      >> /etc/group
+
+# Set up the git config
+RUN \
+     echo "[user]" > $HOME/.gitconfig && \
+     echo "  email = $UNAME@cli-raw.image" >> $HOME/.gitconfig && \
+     echo "  name = $UNAME" >> $HOME/.gitconfig
 
 # Metadata.
 ARG IMAGE_VERSION=helper

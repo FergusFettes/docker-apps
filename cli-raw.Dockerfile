@@ -1,27 +1,18 @@
 # Pull base image.
 FROM ubuntu:18.04 as base
 
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
 ENV HOME /home/ffettes
+ENV UNAME ffettes
+ENV SHELL /bin/zsh
 
 # Standard apt installs
 # TODO: find out which of these are build dependencies and delete them afterwards, use the jlesage image for these things
 RUN \
-     apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
-     iputils-ping iproute2 sudo \
-     vim python3-neovim tmux zsh git mosh \
-     python3
-
-# Configuration
-RUN \
-     locale-gen en_US.UTF-8 && \
-     mkdir /var/run/sshd && \
-     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+     apt update && apt install -y build-essential cmake python3-dev software-properties-common \
+     sudo tree man \
+     vim python3-neovim tmux zsh git ranger
 
 COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
-
 # installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
@@ -36,17 +27,8 @@ RUN \
      dpkg -i $HOME/.debs/bat.deb && \
      rm -rf $HOME/.temp $HOME/.debs
 
-COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
-COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
-COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
-COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/sudoers.d/
-COPY --chown=1000:1000 cli-config $HOME/
-
-ENV UNAME ffettes
-RUN \
-     echo "[user]" > $HOME/.gitconfig && \
-     echo "  email = $UNAME@cli-raw.image" >> $HOME/.gitconfig && \
-     echo "  name = $UNAME" >> $HOME/.gitconfig
+COPY --from=randomvilliager/docker-apps:user /etc/ /etc/
+COPY --chown=1000:1000 cli-config $HOME/.gitconfig $HOME/.gitconfig
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
@@ -57,11 +39,9 @@ RUN \
      echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
      # Chown the work folder
      echo "sudo chown -R $UNAME:1000 $HOME/work" && \
-     echo "export SHELL=/bin/zsh" >> /startapp.sh && \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
-EXPOSE 22
 VOLUME $HOME/work
 WORKDIR $HOME/work
 USER $UNAME
