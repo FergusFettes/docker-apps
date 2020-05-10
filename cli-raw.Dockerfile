@@ -9,7 +9,7 @@ ENV HOME /home/ffettes
 # Standard apt installs
 RUN \
      apt update && apt install -y man tree locales openssh-server curl wget build-essential cmake python3-dev software-properties-common \
-     iputils-ping \
+     iputils-ping iproute2 sudo \
      vim python3-neovim tmux zsh git mosh \
      python3
 
@@ -26,25 +26,22 @@ RUN \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      python3 install.py && \
      $HOME/.fzf/install && \
+     rm $HOME/.bashrc $HOME/.fzf.bash && \
      mv $HOME/.zsh $HOME/.temp && \
-     cd $HOME/.temp && \
      ZSH=$HOME/.zsh \
-     sh install.sh --unattended --keep-zshrc && \
+     sh $HOME/.temp/install.sh --unattended --keep-zshrc && \
      mv $HOME/.temp/custom/plugins/* $HOME/.zsh/custom/plugins && \
      dpkg -i $HOME/.debs/ripgrep.deb && \
-     dpkg -i $HOME/.debs/bat.deb
-
-# move this up at some point
-RUN \
-     apt update && apt install sudo
+     dpkg -i $HOME/.debs/bat.deb && \
+     rm -rf $HOME/.temp $HOME/.debs
 
 COPY --from=randomvilliager/docker-apps:user /etc/passwd /etc/passwd
 COPY --from=randomvilliager/docker-apps:user /etc/shadow /etc/shadow
 COPY --from=randomvilliager/docker-apps:user /etc/group /etc/group
-COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/
+COPY --from=randomvilliager/docker-apps:user /etc/sudoers.d/ /etc/sudoers.d/
 COPY --chown=1000:1000 cli-config $HOME/
 
-# ENV UNAME ffettes
+ENV UNAME ffettes
 RUN \
      echo "[user]" > $HOME/.gitconfig && \
      echo "  email = $UNAME@cli-raw.image" >> $HOME/.gitconfig && \
@@ -52,16 +49,20 @@ RUN \
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
+     # So you can ssh in (if you are authorized)
      echo "$(which sshd)" >> /startapp.sh && \
-     echo "export SHELL=/bin/zsh" >> /startapp.sh && \
      # The next two lines are useful if you map your ssh keys in and want to use github
      echo "eval `ssh-agent -s`" >> /startapp.sh && \
      echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
+     # Chown the work folder
+     echo "sudo chown -R $UNAME:1000 $HOME/work" && \
+     echo "export SHELL=/bin/zsh" >> /startapp.sh && \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
 EXPOSE 22
-WORKDIR $HOME
+VOLUME $HOME/work
+WORKDIR $HOME/work
 USER $UNAME
 
 # Metadata.
