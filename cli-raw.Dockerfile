@@ -5,8 +5,7 @@ ENV HOME /home/ffettes
 ENV UNAME ffettes
 ENV SHELL /bin/zsh
 
-# Standard apt installs
-# TODO: find out which of these are build dependencies and delete them afterwards, use the jlesage image for these things
+# Core apt componenets
 RUN \
      apt update && sudo tree man \
      vim python3-neovim tmux zsh git ranger
@@ -34,10 +33,10 @@ COPY --chown=1000:1000 --from=randomvilliager/docker-apps:user $HOME/.gitconfig 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      # So you can ssh in (if you are authorized)
-     echo "$(which sshd)" >> /startapp.sh && \
+     # echo "$(which sshd)" >> /startapp.sh && \
      # The next two lines are useful if you map your ssh keys in and want to use github
-     echo "eval `ssh-agent -s`" >> /startapp.sh && \
-     echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
+     # echo "eval `ssh-agent -s`" >> /startapp.sh && \
+     # echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
      # Chown the work folder
      echo "sudo chown -R $UNAME:1000 $HOME/work" && \
      echo "exec /bin/zsh" >> /startapp.sh && \
