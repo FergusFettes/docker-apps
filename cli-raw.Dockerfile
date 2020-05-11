@@ -10,7 +10,7 @@ RUN \
      apt update && apt install -y sudo tree man \
      vim python3-neovim tmux zsh git ranger
 
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
+COPY --chown=1000:1000 --from=ffettes/cli:content /content/ $HOME/
 # installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
      apt update && apt install -y curl cmake python3-dev software-properties-common build-essential && \
@@ -25,10 +25,11 @@ RUN \
      dpkg -i $HOME/.debs/ripgrep.deb && \
      dpkg -i $HOME/.debs/bat.deb && \
      rm -rf $HOME/.temp $HOME/.debs && \
-     apt remove curl cmake python3-dev software-properties-common build-essential && apt autoremove
+     apt remove -y curl cmake python3-dev software-properties-common build-essential && apt autoremove -y
 
-COPY --from=randomvilliager/docker-apps:user /etc/ /etc/
-COPY --chown=1000:1000 --from=randomvilliager/docker-apps:user $HOME/.gitconfig $HOME/.gitconfig
+COPY --from=ffettes/cli:user /etc/ /etc/
+COPY --chown=1000:1000 --from=ffettes/cli:user $HOME/.gitconfig $HOME/.gitconfig
+COPY --chown=1000:1000 cli-config $HOME/
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
@@ -42,8 +43,8 @@ RUN \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
-VOLUME $HOME/work
-WORKDIR $HOME/work
+# VOLUME $HOME/work
+# WORKDIR $HOME/work
 USER $UNAME
 
 # Metadata.
