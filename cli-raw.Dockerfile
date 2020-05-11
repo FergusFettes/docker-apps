@@ -28,7 +28,7 @@ RUN \
      rm -rf $HOME/.temp $HOME/.debs
 
 COPY --from=randomvilliager/docker-apps:user /etc/ /etc/
-COPY --chown=1000:1000 cli-config $HOME/.gitconfig $HOME/.gitconfig
+COPY --chown=1000:1000 --from=randomvilliager/docker-apps:user $HOME/.gitconfig $HOME/.gitconfig
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
