@@ -5,8 +5,7 @@ FROM jlesage/baseimage:ubuntu-18.04 AS base
 # Standard apt installs
 # TODO: find out which of these are build dependencies and delete them afterwards, use the jlesage image for these things
 RUN \
-     add-pkg build-essential cmake python3-dev software-properties-common \
-     sudo tree man \
+     add-pkg sudo tree man \
      vim python3-neovim tmux zsh git ranger
 
 ENV UNAME ffettes
@@ -16,6 +15,7 @@ COPY --from=randomvilliager/docker-apps:user /etc/ /defaults/
 COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
 # installs from content ycm, fzf, oh-my-zsh, bat
 RUN \
+     add-pkg --virtual deps curl cmake python3-dev software-properties-common build-essential && \
      cd $HOME/.vim/plugged/youcompleteme/ && \
      python3 install.py && \
      $HOME/.fzf/install && \
@@ -26,7 +26,9 @@ RUN \
      mv $HOME/.temp/custom/plugins/* $HOME/.zsh/custom/plugins && \
      dpkg -i $HOME/.debs/ripgrep.deb && \
      dpkg -i $HOME/.debs/bat.deb && \
-     rm -rf $HOME/.temp $HOME/.debs
+     rm -rf $HOME/.temp $HOME/.debs && \
+     del-pkg deps
+
 COPY --chown=1000:1000 cli-config $HOME/.gitconfig $HOME/.gitconfig
 
 RUN \
@@ -40,3 +42,12 @@ RUN \
 
 ENV \
      APP_NAME="CLI"
+
+# Metadata.
+ARG IMAGE_VERSION=cli
+LABEL \
+      org.label-schema.name="cli" \
+      org.label-schema.description="My basic terminal environment in nice s6 image" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      org.label-schema.vcs-url="https://github.com/fergusfettes/docker-apps" \
+      org.label-schema.schema-version="1.0"

@@ -304,6 +304,8 @@ nnoremap <leader>m :NERDTreeToggle<CR>
 "" yank to system
 nnoremap <leader>y "+
 
+nnoremap <leader>ig :IndentGuidesEnable<CR>
+
 " }}}
 " CtrlP Settings {{{
 let g:ctrlp_match_window = 'bottom,order:ttb'
@@ -369,6 +371,9 @@ let g:UltiSnipsListSnippets="sd"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+
+" Indent guides
+let g:indent_guides_enable_on_vim_startup = 1
 
 " }}}
 " Autogroups {{{

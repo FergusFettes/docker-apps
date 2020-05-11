@@ -17,3 +17,5 @@ alias tk="tmux attach"
 
 alias l=k
 alias cat=bat
+alias man=~/.local/bat-extras/src/batman.sh
+alias batgrep=~/.local/bat-extras/src/batgrep.sh
