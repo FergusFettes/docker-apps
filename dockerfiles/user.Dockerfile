@@ -1,4 +1,4 @@
-FROM ubuntu:18.04-slim
+FROM ubuntu:18.04
 
 # User config
 ENV UID="1000" \
