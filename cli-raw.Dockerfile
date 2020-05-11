@@ -7,7 +7,7 @@ ENV SHELL /bin/zsh
 
 # Core apt componenets
 RUN \
-     apt update && sudo tree man \
+     apt update && apt install -y sudo tree man \
      vim python3-neovim tmux zsh git ranger
 
 COPY --chown=1000:1000 --from=randomvilliager/docker-apps:content /content/ $HOME/
