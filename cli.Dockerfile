@@ -29,13 +29,13 @@ RUN \
      rm -rf $HOME/.temp $HOME/.debs && \
      del-pkg deps
 
-COPY --chown=1000:1000 cli-config $HOME/.gitconfig $HOME/.gitconfig
+# COPY --chown=1000:1000 --from=randomvilliager/docker-apps:user $HOME/.gitconfig $HOME/
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
-     echo "sudo $(which sshd)" >> /startapp.sh && \
-     echo "eval `ssh-agent -s`" >> /startapp.sh && \
-     echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
+     # echo "sudo $(which sshd)" >> /startapp.sh && \
+     # echo "eval `ssh-agent -s`" >> /startapp.sh && \
+     # echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
      # Chown the work folder
      echo "sudo chown -R $UNAME:1000 $HOME/work" && \
      echo "exec /bin/zsh" >> /startapp.sh
