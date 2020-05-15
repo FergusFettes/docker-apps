@@ -7,7 +7,7 @@ ENV SHELL /bin/zsh
 
 # Core apt componenets
 RUN \
-     apt update && apt install -y sudo tree man \
+     apt update && apt install -y sudo tree man ncdu zip unzip \
      vim python3-neovim tmux zsh git ranger
 
 COPY --chown=1000:1000 --from=ffettes/cli:content /content/ $HOME/
@@ -33,18 +33,13 @@ COPY --chown=1000:1000 cli-config $HOME/
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
-     # So you can ssh in (if you are authorized)
-     # echo "$(which sshd)" >> /startapp.sh && \
-     # The next two lines are useful if you map your ssh keys in and want to use github
-     # echo "eval `ssh-agent -s`" >> /startapp.sh && \
-     # echo "ssh-add ~/.ssh/id_rsa" >> /startapp.sh && \
      # Chown the work folder
-     echo "sudo chown -R $UNAME:1000 $HOME/work" && \
+     echo "sudo chown -R $UNAME:1000 $HOME/work" >> && \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
-# VOLUME $HOME/work
-# WORKDIR $HOME/work
+VOLUME $HOME/work
+WORKDIR $HOME/work
 USER $UNAME
 
 # Metadata.
