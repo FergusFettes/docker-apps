@@ -24,7 +24,6 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 sudo groupadd docker || true
 sudo usermod -aG docker $USER
 
-newgrp docker
 sudo systemctl enable docker
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
