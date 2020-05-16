@@ -14,4 +14,3 @@ RUN \
      sed "/${UNAME}/d" /etc/group && \
      echo "${GNAME}:x:${GID}:${UNAME}" && \
      >> /etc/group
-

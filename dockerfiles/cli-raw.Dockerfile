@@ -31,10 +31,15 @@ COPY --from=ffettes/cli:user /etc/ /etc/
 COPY --chown=1000:1000 --from=ffettes/cli:user $HOME/.gitconfig $HOME/.gitconfig
 COPY --chown=1000:1000 cli-config $HOME/
 
+ENV UID=1000
+ENV GID=1000
+COPY script/usermod.sh /usr/bin/mod_user_id
+
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      # Chown the work folder
-     echo "sudo chown -R $UNAME:1000 $HOME/work" >> && \
+     echo "mod_user_id"
+     echo "sudo chown -R $UID:$GID $HOME/work" >> && \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
