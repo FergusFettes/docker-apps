@@ -38,8 +38,8 @@ COPY scripts/usermod.sh /usr/bin/mod_user_id
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
      # Chown the work folder
-     echo "mod_user_id" && \
-     echo "sudo chown -R $UID:$GID $HOME/work" >> && \
+     echo "mod_user_id" >> /startapp.sh && \
+     echo "sudo chown -R $UID:$GID $HOME/work" >> /startapp.sh && \
      echo "exec /bin/zsh" >> /startapp.sh && \
      chmod +x /startapp.sh
 ENTRYPOINT /startapp.sh
