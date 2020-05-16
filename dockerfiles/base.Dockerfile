@@ -29,7 +29,7 @@ RUN \
 
 COPY --from=ffettes/cli:user /etc/ /etc/
 COPY --chown=1000:1000 --from=ffettes/cli:user $HOME/.gitconfig $HOME/.gitconfig
-COPY --chown=1000:1000 cli-config $HOME/
+COPY --chown=1000:1000 config $HOME/
 
 ENV UID=1000
 ENV GID=1000
