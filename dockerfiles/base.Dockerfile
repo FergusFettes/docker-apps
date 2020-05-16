@@ -33,7 +33,7 @@ COPY --chown=1000:1000 config $HOME/
 
 ENV UID=1000
 ENV GID=1000
-COPY script/usermod.sh /usr/bin/mod_user_id
+COPY scripts/usermod.sh /usr/bin/mod_user_id
 
 RUN \
      echo "#!/bin/sh" > /startapp.sh && \
