@@ -204,9 +204,6 @@ noremap <leader>e :e<space>
 noremap <leader>fw :w !sudo tee %<CR>
 noremap <leader>fwc :w !sudo tee %
 
-"" Terminal escape
-tnoremap <Esc> <C-w><C-n>
-
 "" yank to system
 nnoremap <leader>y "+
 

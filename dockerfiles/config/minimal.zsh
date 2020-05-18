@@ -24,3 +24,6 @@ alias x=exit
 alias xz="exec zsh"
 alias t=tmux
 alias tk="tmux attach"
+
+alias l="ls -la"
+alias ll="ls"
