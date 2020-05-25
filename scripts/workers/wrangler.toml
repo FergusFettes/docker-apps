@@ -1,0 +1,6 @@
+name = "configs"
+type = "webpack"
+account_id = "a04395bd3fa63bed4bea389c096fbb57"
+workers_dev = true
+route = ""
+zone_id = ""

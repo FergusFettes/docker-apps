@@ -14,18 +14,18 @@ async function serveAsset(event) {
   let file = 'none'
 
   if (!response) {
-    switch (new url.pathname) {
-      case "zsh":
+    switch (url.pathname) {
+      case "/zsh":
         file = ZSH_MIN;
         break;
-      case "vim":
+      case "/vim":
         file = VIM_MIN;
         break;
-      case "tmux":
+      case "/tmux":
         file = TMUX;
         break;
     }
-    response = await fetch(`${GIT_URL}${url.pathname}`)
+    response = await fetch(`${GIT_URL}${file}`)
     const headers = { 'cache-control': 'public, max-age=14400' }
     response = new Response(response.body, { ...response, headers })
     event.waitUntil(cache.put(event.request, response.clone()))
