@@ -1,0 +1,3 @@
+[submodule "dockerfiles/config"]
+	path = dockerfiles/config
+	url = git@github.com:fergusfettes/dotfiles.git
