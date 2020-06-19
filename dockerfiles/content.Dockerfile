@@ -48,8 +48,6 @@ RUN \
      git submodule update --init --recursive && \
      git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && \
      cd $HOME/.vim/plugged && \
-     git clone --depth 1 https://github.com/scrooloose/nerdtree && \
-     git clone --depth 1 https://github.com/Xuyuanp/nerdtree-git-plugin && \
      # Silver Searcher
      # TODO: properly try out these search tools and choose one
      git clone --depth 1 https://github.com/rking/ag.vim && \
@@ -74,7 +72,6 @@ RUN \
      git clone --depth 1 https://github.com/godlygeek/tabular && \
      git clone --depth 1 https://github.com/nathanaelkane/vim-indent-guides && \
      git clone --depth 1 https://github.com/tpope/vim-commentary && \
-     # git clone --depth 1 https://github.com/scrooloose/nerdcommenter && \
      git clone --depth 1 https://github.com/Raimondi/delimitMate && \
      git clone --depth 1 https://github.com/sheerun/vim-polyglot && \
      # Close buffers
@@ -84,18 +81,18 @@ RUN \
      git clone --depth 1 https://github.com/majutsushi/tagbar && \
      # git clone --depth 1 https://github.com/vim-scripts/taglist.vim && \
      # number converter
-     # TODO: try out radical and surroutn
+     # TODO: try out radical and surround
      git clone --depth 1 https://github.com/tpope/vim-repeat && \
      git clone --depth 1 https://github.com/tpope/vim-surround && \
      git clone --depth 1 https://github.com/glts/vim-magnum.git && \
      git clone --depth 1 https://github.com/glts/vim-radical.git && \
      # TODO: get to know this one and fix registers forever
      git clone --depth 1 https://github.com/svermeulen/vim-easyclip && \
+     git clone --depth 1 https://github.com/easymotion/vim-easymotion && \
      #  rust
      #  Vim racer
      # git clone --depth 1 https://github.com/racer-rust/vim-racer && \
      #  Plugs I want to check out at some point:
-     # git clone --depth 1 https://github.com/easymotion/vim-easymotion && \
      # git clone --depth 1 https://github.com/skanehira/docker.vim && \
      # git clone --depth 1 https://github.com/ivanov/vim-ipython && \
      #
@@ -109,7 +106,6 @@ RUN \
      # git clone --depth 1 https://github.com/michaeljsmith/vim-indent-object && \
      # Theme
      git clone --depth 1 https://github.com/junegunn/seoul256.vim
-     # git clone --depth 1 https://github.com/altercation/vim-colors-solarized
 
 FROM base
 COPY --from=curl /content/ /content/
