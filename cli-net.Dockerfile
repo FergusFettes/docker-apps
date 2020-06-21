@@ -9,7 +9,7 @@ ENV UNAME ffettes
 USER root
 RUN \
      apt update && apt install -y \
-     locales openssh-server curl wget mosh iputils-ping iproute2
+     locales openssh-server curl wget mosh iputils-ping iproute2 fping
 
 # Configuration
 RUN \
