@@ -6,7 +6,7 @@ Here are my docker experiments. Currently I have 3 or 4 goals, in approximate or
 
 1.  my-standard-setup: this is a simple docker image containing vim zsh and so on for quickly being able to work nicely in new environments, also serves to document/replace the process I have to go through whenever I do a fresh install.
 
-COMPLETE: available at [randomvilliager/docker-apps:cli-raw](https://hub.docker.com/r/ffettes/cli) 
+COMPLETE: available at [ffettes/cli](https://hub.docker.com/r/ffettes/cli) 
 however I need to make an upgraded version using the jlesage s6 baseimage so i can make it much smaller
 
 also need to make an ARM version for the raspi
