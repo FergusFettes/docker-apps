@@ -8,4 +8,6 @@ RUN \
      apt install -y google-cloud-sdk && \
      apt remove -y apt install -y apt-utils apt-transport-https ca-certificates gnupg && apt autoremove
 
+USER ffettes
+
 CMD gcloud init

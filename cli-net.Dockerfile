@@ -1,5 +1,5 @@
 # Pull cli base
-FROM randomvilliager/docker-apps:cli-raw AS cli-base
+FROM ffettes/docker-apps:cli-raw AS cli-base
 
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
