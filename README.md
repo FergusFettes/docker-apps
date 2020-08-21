@@ -2,6 +2,8 @@
 
 Here are my docker experiments. Currently I have 3 or 4 goals, in approximate order of when I'll work on them:
 
+Heavily inspired by [jlesage][20] and [woahbase][30].
+
 ## CLI apps
 
 1. [my-standard-setup](./dockerfiles/base.Dockerfile): this is a simple docker image containing vim zsh and so on for quickly being able to work nicely in new environments, also serves to document/replace the process I have to go through whenever I do a fresh install.
@@ -15,10 +17,11 @@ TODO:
 
 3. specific images for other small cli tasks/environments (such as for python/javascript)
 
+Since I discovered GNU stow and [dotfiles][11] I have less interest in the project to create the perfect command line, but the images below will be worth attempting at some point.
 
 ## Audio apps
 
-There are already some options for using firefox or chrome inside a docker container, but I havent found one yet that has everything I want. Basically just going to add a puslesaudio server to the [jlesage/firefox](https://hub.docker.com/r/jlesage/firefox) image. This will make it possible to have
+There are already some options for using firefox or chrome inside a docker container, but I havent found one yet that has everything I want. Basically just going to add a puslesaudio server to the [jlesage/firefox][21] image. This will make it possible to have
 
 1. firefox in a x11 container with a pulseaudio server, so multiple people can watch youtube together and hear the audio at the same time
 
@@ -31,4 +34,10 @@ There are already some options for using firefox or chrome inside a docker conta
 
 2. blender headless renderer: afaict i might have genuinly found something that should exist but doesnt yet? once i have completed the above images i should have enough experience to do this
 
-[1](https://hub.docker.com/r/ffettes/cli) 
+[10]: https://hub.docker.com/r/ffettes/cli
+[11]: https://github.com/fergusfettes/dotfiles
+
+[20]: https://github.com/jlesage
+[21]: https://hub.docker.com/r/jlesage/firefox
+
+[30]: https://github.com/woahbase
